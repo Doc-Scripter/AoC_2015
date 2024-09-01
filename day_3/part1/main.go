@@ -13,6 +13,7 @@ func Deliver(str string) int {
 	var x, y int
 	house[[2]int{x, y}] = true
 
+	fmt.Println(str)
 	for i := 0; i < len(str)-1; i++ {
 		switch string(str[i]) {
 		case "^":
@@ -30,7 +31,6 @@ func Deliver(str string) int {
 			house[inner] = true
 		}
 	}
-
 	return count
 }
 
