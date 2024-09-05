@@ -8,36 +8,34 @@ import (
 	"strings"
 )
 
-func toggleLights(instructions map[[2]int]string, currentGrid map[[2]int]string) map[[2]int]string {
+func toggleLights(instructions map[[2]int]string, currentGrid map[[2]int]int) map[[2]int]int {
 	for coordinates, instruction := range instructions {
 		switch instruction {
 		case "on":
 
-			currentGrid[coordinates] = "on"
+			currentGrid[coordinates] += 1
 
 		case "off":
 
-			currentGrid[coordinates] = "off"
+			currentGrid[coordinates] -= 1
 
 		case "toggle":
 
-			if currentGrid[coordinates] == "off" {
-				currentGrid[coordinates] = "on"
-			} else if currentGrid[coordinates] == "on" {
-				currentGrid[coordinates] = "off"
-			}
-
+			currentGrid[coordinates] += 2
+		}
+		if currentGrid[coordinates] < 0 {
+			currentGrid[coordinates] = 0
 		}
 	}
 	return currentGrid
 }
 
-func originalGrid() map[[2]int]string {
-	origin := make(map[[2]int]string)
+func originalGrid() map[[2]int]int {
+	origin := make(map[[2]int]int)
 
 	for i := 0; i < 1000; i++ {
 		for j := 0; j < 1000; j++ {
-			origin[[2]int{i, j}] = "off"
+			origin[[2]int{i, j}] = 0
 		}
 	}
 
@@ -46,7 +44,7 @@ func originalGrid() map[[2]int]string {
 
 func getInstructions(s string) map[[2]int]string {
 	commands := make(map[[2]int]string)
-	// fmt.Println(s)
+	
 
 	inputSlice := strings.Split(s, " ")
 
@@ -97,19 +95,17 @@ func getInstructions(s string) map[[2]int]string {
 	return commands
 }
 
-func lightsOn(currentGrid map[[2]int]string) int {
+func Brightness(currentGrid map[[2]int]int) int {
 	var count int
 	for _, v := range currentGrid {
-		if v == "on" {
-			count++
-		}
+		count += v
 	}
 	return count
 }
 
 func countLights(s []string) int {
 	lineCount := len(s)
-	var latestGrid map[[2]int]string
+	var latestGrid map[[2]int]int
 
 	var instructions map[[2]int]string
 	var count int
@@ -122,7 +118,7 @@ func countLights(s []string) int {
 
 		latestGrid = toggleLights(instructions, latestGrid)
 		// fmt.Println(latestGrid)
-		count = lightsOn(latestGrid)
+		count = Brightness(latestGrid)
 
 	}
 	return count
